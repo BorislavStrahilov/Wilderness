@@ -1,2 +1,0 @@
-# Wilderness
-Wilderness survival game
