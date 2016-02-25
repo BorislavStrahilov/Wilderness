@@ -32,6 +32,8 @@ public class HUDmanager {
 	
 	public void render(Graphics2D g){
 		
+		g.setFont(g.getFont().deriveFont(17f));
+				
 		temp = player.temperature / 60;
 		hunger = player.hunger / 60;
 		energy = player.energy / 60;
@@ -63,21 +65,21 @@ public class HUDmanager {
 		
 		
 		//ENERGY BAR
-		g.drawString("Energy", Main.width - (Main.width / 7) - 48, Main.height -  (Main.height / 6) + 15);
+		g.drawString("Energy", Main.width - (Main.width / 7) - 80, Main.height -  (Main.height / 6) + 14);
 		g.setColor(energyColor);
 		g.fillRect(Main.width - (Main.width / 7), Main.height -  (Main.height / 6) - 2, (int) ((Main.width/8 * (energy/100))), 20);
 		g.setColor(Color.black);
 		g.drawRect(Main.width - (Main.width / 7), Main.height -  (Main.height / 6) - 2, Main.width/8, 20);
 
 		//HUNGER BAR
-		g.drawString("Hunger", Main.width - (Main.width / 7) - 48, Main.height -  (Main.height / 6) + 55);
+		g.drawString("Hunger", Main.width - (Main.width / 7) - 80, Main.height -  (Main.height / 6) + 54);
 		g.setColor(hungerColor);
 		g.fillRect(Main.width - (Main.width / 7), Main.height -  (Main.height / 6) + 38, (int) ((Main.width/8 * (hunger/100))), 20);
 		g.setColor(Color.black);
 		g.drawRect(Main.width - (Main.width / 7), Main.height -  (Main.height / 6) + 38, Main.width/8, 20);
 		
 		//TEMP BAR
-		g.drawString("Temp", Main.width - (Main.width / 7) - 48, Main.height -  (Main.height / 6) + 95);
+		g.drawString("Temp", Main.width - (Main.width / 7) - 68, Main.height -  (Main.height / 6) + 94);
 		g.setColor(tempColor);
 		g.fillRect(Main.width - (Main.width / 7), Main.height -  (Main.height / 6) + 78, (int) ((Main.width/8 * (temp/100))), 20);
 		g.setColor(Color.black);

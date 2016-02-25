@@ -7,7 +7,6 @@ import java.awt.Point;
 import java.awt.Toolkit;
 
 import my.project.gop.main.GameWindow;
-import my.project.gop.main.IDGameLoop;
 import my.project.gop.main.SpriteSheet;
 import wsg.MoveableObjects.Player;
 import wsg.gameLoop.GameLoop;

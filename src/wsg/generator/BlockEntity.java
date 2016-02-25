@@ -6,9 +6,12 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
+import wsg.generator.World;
 import my.project.gop.main.Vector2F;
 
 public class BlockEntity extends Rectangle {
+	
+	private static final long serialVersionUID = 1L;
 
 	private Vector2F pos;
 	private BufferedImage blockImage;
@@ -54,7 +57,7 @@ public class BlockEntity extends Rectangle {
 			pos.ypos += 0.075;
 			
 			if(lifeFade <= 0.00001){
-				World.removeDroppedEntity(this);
+				//World.removeDroppedEntity(this);
 				isAlive = false;
 			}
 		}

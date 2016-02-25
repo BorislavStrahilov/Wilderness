@@ -3,7 +3,6 @@ package wsg.generator;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 
-import my.project.gop.main.Vector2F;
 import wsg.MoveableObjects.Player;
 
 public class TileManager {
@@ -41,6 +40,6 @@ public class TileManager {
 		}
 	}
 	
-	
+	public static ArrayList<Block> getBlocks() { return blocks; } 
 	
 }

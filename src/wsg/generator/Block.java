@@ -3,13 +3,14 @@ package wsg.generator;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.util.Vector;
 
 import my.project.gop.main.Vector2F;
 import wsg.main.Assets;
 
 public class Block extends Rectangle {
 
+	private static final long serialVersionUID = 1L;
+	
 	Vector2F pos = new Vector2F();
 	private int blockSize = 48;
 	private BlockType blocktype;
@@ -19,11 +20,19 @@ public class Block extends Rectangle {
 	private boolean dropped = false;
 	private boolean shouldDrop = false;
 
+	//regular 
 	public Block(Vector2F pos, BlockType blocktype) {
 		this.pos = pos;
 		this.blocktype = blocktype;
 
 		init();
+	}
+
+	//spawn block constructor
+	public Block(Vector2F pos) {
+		setBounds((int) pos.xpos, (int) pos.ypos, blockSize, blockSize);
+		this.pos = pos;
+		isAlive = true;
 	}
 
 	public Block isSolid(boolean isSolid) {
@@ -76,8 +85,10 @@ public class Block extends Rectangle {
 
 	public void render(Graphics2D g) {
 		if (isAlive) {
-			g.drawImage(blockImage, (int) pos.getWorldLocation().xpos, (int) pos.getWorldLocation().ypos, blockSize,
-					blockSize, null);
+			if(blockImage != null){
+				g.drawImage(blockImage, (int) pos.getWorldLocation().xpos, (int) pos.getWorldLocation().ypos, blockSize,
+						blockSize, null);
+			}
 		}
 		else{
 			if(!dropped && shouldDrop){
@@ -86,12 +97,14 @@ public class Block extends Rectangle {
 				
 				Vector2F newPos = new Vector2F(xpos, ypos);
 				
-				World.dropBlockEntity(newPos, blockImage);
+				//World.dropBlockEntity(newPos, blockImage);
 				dropped = true;
 			}
 		}
 
 	}
+	
+	public Vector2F getBlockPos () { return pos; }
 
 	public boolean isSolid() {
 		return isSolid;

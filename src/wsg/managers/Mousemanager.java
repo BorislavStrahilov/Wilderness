@@ -1,6 +1,5 @@
 package wsg.managers;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
@@ -15,7 +14,7 @@ public class Mousemanager implements MouseListener, MouseWheelListener, MouseMot
 
 	private static int mouseMovedX, mouseMovedY;
 	public static Point mouse;
-	private static boolean pressed;
+	public static boolean pressed;
 	
 	
 	public void tick(){
