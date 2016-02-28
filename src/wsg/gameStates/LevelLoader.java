@@ -7,18 +7,18 @@ import wsg.gameState.GameState;
 import wsg.gameState.GameStateManager;
 import wsg.generator.World;
 
-public class DungeonLevelLoader extends GameState {
+public class LevelLoader extends GameState {
 	
 	World world;
 
-	public DungeonLevelLoader(GameStateManager gsm) {
+	public LevelLoader(GameStateManager gsm) {
 		super(gsm);
 	}
 
 	public void init() {
 		world = new World("world1");
 		world.setSize(100,100);
-		world.setWorldSpawn(50, 50);
+		world.setWorldSpawn(20, 10);
 		world.addPlayer(new Player());
 		world.init();
 		world.generate("map.png");

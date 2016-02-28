@@ -3,7 +3,7 @@ package wsg.main;
 import java.awt.Point;
 
 import wsg.generator.Block;
-import wsg.generator.TileManager;
+import wsg.managers.TileManager;
 
 public class Check {
 	

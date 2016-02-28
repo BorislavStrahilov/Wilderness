@@ -1,5 +1,6 @@
 package wsg.MoveableObjects;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -43,6 +44,9 @@ public class Player implements KeyListener {
 	public static int temperatureTimeStart;
 
 	private static boolean up, down, left, right, running;
+	private static boolean moving;
+	private static boolean hasSpawned = false;
+	
 	private float maxSpeed = 150;
 	private float fixedDt = 1F / 60F;
 
@@ -99,16 +103,18 @@ public class Player implements KeyListener {
 
 	public Player() {
 		
-		hud = new HUDmanager(this);
-		gui = new GUImanager();
+
 		
 		pos = new Vector2F((Main.width / 2) - (width / 2), (Main.height / 2) - ((Main.height / 5) / 2) - (height / 2));
 
 	}
 
-	public static void init(World givenWorld) {
+	public void init(World givenWorld) {
 		
 		world = givenWorld;
+		
+		hud = new HUDmanager(world);
+		gui = new GUImanager();
 
 		render = new Rectangle(
 				(int) (pos.xpos - pos.getWorldLocation().xpos + pos.xpos - renderDistanceW * 32 / 2 + width / 2),
@@ -197,6 +203,8 @@ public class Player implements KeyListener {
 		hungerTimeStart = (int) System.nanoTime() / 1000000000;
 		energyTimeStart = (int) System.nanoTime() / 1000000000;
 		temperatureTimeStart = (int) System.nanoTime() / 1000000000;
+		
+		hasSpawned = true;
 
 	}
 
@@ -208,11 +216,11 @@ public class Player implements KeyListener {
 		energyTimer = (int) (System.nanoTime() / 1000000000) - energyTimeStart;
 		temperatureTimer = (int) (System.nanoTime() / 1000000000) - temperatureTimeStart;
 
-		if (hungerTimer % 17 == 0)
+		if (hungerTimer % 1 == 0)
 			hunger++;
-		if (energyTimer % 31 == 0)
+		if (energyTimer % 1 == 0)
 			energy--;
-		if (temperatureTimer % 24 == 0)
+		if (temperatureTimer % 1 == 0)
 			temperature--;
 
 		playerMM.tick();
@@ -258,6 +266,10 @@ public class Player implements KeyListener {
 		// standing still
 		if (!up && !down && !right && !left && (aniTime % 3 == 0)) {
 			animationState = 4;
+			
+			if(moving)
+				moving = false;
+			
 		}
 
 		if (running && animationState != 4) {
@@ -267,7 +279,7 @@ public class Player implements KeyListener {
 				ani_down.setSpeed(ani_speed);
 				ani_left.setSpeed(ani_speed);
 				ani_right.setSpeed(ani_speed);
-				maxSpeed = 200;
+				maxSpeed = 230;
 			}
 		} else {
 			if (ani_speed != 180) {
@@ -279,7 +291,7 @@ public class Player implements KeyListener {
 				maxSpeed = 150;
 			}
 		}
-
+		
 	}// end tick
 
 	public void render(Graphics2D g) {
@@ -328,23 +340,18 @@ public class Player implements KeyListener {
 			ani_idleDown.update(System.currentTimeMillis());
 
 		}
+		
+		
+//		g.setColor(Color.black);
+//		
+//		if(World.currentlyNightTime){
+//			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+//			g.fillRect((int) pos.xpos - (width / scale), (int) (pos.ypos - height), width * scale, height * scale);
+//		}
 
-		hud.render(g);
-		// gui.render(g);
+
 		g.setColor(Color.white);
-
-		/*
-		 * g.drawString("up:      " + up, 200, Main.height - 70); g.drawString(
-		 * "down:  " + down, 200, Main.height - 50); g.drawString("left:     " +
-		 * left, 200, Main.height - 30); g.drawString("right:   " + right, 200,
-		 * Main.height - 10);
-		 */
-
-		playerMM.render(g);
-		
-		
-		
-		
+	
 	}
 
 	public void moveMapUp(float speed) {
@@ -607,27 +614,65 @@ public class Player implements KeyListener {
 	 * 
 	 */
 
+	public static HUDmanager getHUD() {
+		return hud;
+	}
+	
+	public Mousemanager getMouseManager() {
+		return playerMM;
+	}
+	
 	public Vector2F getPos() {
 		return pos;
+	}
+	
+	public static World getWorld() {
+		return world;
 	}
 
 	public int getAnimationState() {
 		return animationState;
 	}
+	
+	public boolean isMoving() {
+		return moving;
+	}
+	
+	public boolean hasSpawned() { return hasSpawned; }
 
 	public void keyPressed(KeyEvent e) {
 		int key = e.getKeyCode();
 
 		if (key == KeyEvent.VK_W) {
+			
+			if(!moving){
+				moving = true;
+			}
+			
 			up = true;
 		}
 		if (key == KeyEvent.VK_S) {
+			
+			if(!moving){
+				moving = true;
+			}
+			
 			down = true;
 		}
 		if (key == KeyEvent.VK_A) {
+			
+			if(!moving){
+				moving = true;
+			}
+			
 			left = true;
 		}
 		if (key == KeyEvent.VK_D) {
+			
+			if(!moving){
+				moving = true;
+			}
+			
 			right = true;
 		}
 		if (key == KeyEvent.VK_ESCAPE) {
@@ -635,6 +680,36 @@ public class Player implements KeyListener {
 		}
 		if (key == KeyEvent.VK_SHIFT) {
 			running = true;
+		}
+		
+		if (key == KeyEvent.VK_F) {
+			
+			
+			if( world.currentlyDayTime){
+				world.currentlyDayTime = false;
+				world.currentlyNightTime = true;
+				world.setNightTimeStart(true);
+				
+			}
+			
+			else if( world.currentlyNightTime){
+				
+				world.currentlyNightTime = false;
+				world.currentlyDayTime = true;
+				world.setDayTimeStart(true);
+			}
+
+		}
+		
+		
+		//DEBUG ENABLE
+		if (key == KeyEvent.VK_F3 && hud.debugInfo == false) {
+			hud.debugInfo = true;
+		}
+		
+		//DEBUG DISABLE
+		else if (key == KeyEvent.VK_F3 && hud.debugInfo == true) {
+			hud.debugInfo = false;
 		}
 
 	}

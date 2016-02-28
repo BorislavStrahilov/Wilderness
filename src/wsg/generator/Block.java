@@ -1,16 +1,19 @@
 package wsg.generator;
 
+import java.awt.AlphaComposite;
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 import my.project.gop.main.Vector2F;
 import wsg.main.Assets;
+import wsg.managers.LightSource;
 
 public class Block extends Rectangle {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	Vector2F pos = new Vector2F();
 	private int blockSize = 48;
 	private BlockType blocktype;
@@ -20,7 +23,9 @@ public class Block extends Rectangle {
 	private boolean dropped = false;
 	private boolean shouldDrop = false;
 
-	//regular 
+	private float lightLevel;
+
+	// regular
 	public Block(Vector2F pos, BlockType blocktype) {
 		this.pos = pos;
 		this.blocktype = blocktype;
@@ -28,7 +33,7 @@ public class Block extends Rectangle {
 		init();
 	}
 
-	//spawn block constructor
+	// spawn block constructor
 	public Block(Vector2F pos) {
 		setBounds((int) pos.xpos, (int) pos.ypos, blockSize, blockSize);
 		this.pos = pos;
@@ -49,27 +54,26 @@ public class Block extends Rectangle {
 
 		case GRASS_1:
 			blockImage = Assets.getGrass_1();
-
 			break;
-			
+
 		case DIRT_1:
 			blockImage = Assets.getDirt_1();
-			
 			break;
 
-		case STONE_1:
-			blockImage = Assets.getStone_1();
-
+		case DIRT_TL:
+			blockImage = Assets.getDirt_TL();
 			break;
-			
-		case STONE1_TOP:
-			blockImage = Assets.getStone1_top();
 
+		case DIRT_TR:
+			blockImage = Assets.getDirt_TR();
 			break;
-			
-		case WOOD_1:
-			blockImage = Assets.getWood_1();
 
+		case DIRT_BL:
+			blockImage = Assets.getDirt_BL();
+			break;
+
+		case DIRT_BR:
+			blockImage = Assets.getDirt_BR();
 			break;
 
 		}// end switch
@@ -83,28 +87,83 @@ public class Block extends Rectangle {
 
 	}
 
+	public void renderBlockLightLevel(Graphics2D g) {
+		if (isAlive) {
+
+			g.setColor(Color.black);
+			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, lightLevel));
+			g.fillRect((int) pos.getWorldLocation().xpos, (int) pos.getWorldLocation().ypos, blockSize, blockSize);
+
+			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1));
+			g.setColor(Color.white);
+		}
+
+	}
+
 	public void render(Graphics2D g) {
 		if (isAlive) {
-			if(blockImage != null){
+			if (blockImage != null) {
+
 				g.drawImage(blockImage, (int) pos.getWorldLocation().xpos, (int) pos.getWorldLocation().ypos, blockSize,
 						blockSize, null);
+				
+				
+				
+				g.setColor(Color.black);
+
+				if(World.currentlyNightTime){
+					g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+					g.fillRect((int) pos.getWorldLocation().xpos, (int) pos.getWorldLocation().ypos, blockSize, blockSize);
+				}
+
+				g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, lightLevel));
+				g.fillRect((int) pos.getWorldLocation().xpos, (int) pos.getWorldLocation().ypos, blockSize, blockSize);
+
+				g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1));
+				g.setColor(Color.white);
+
 			}
-		}
-		else{
-			if(!dropped && shouldDrop){
+		} else {
+			if (!dropped && shouldDrop) {
 				float xpos = pos.xpos + 24 - 12;
 				float ypos = pos.ypos + 24 - 12;
-				
+
 				Vector2F newPos = new Vector2F(xpos, ypos);
-				
-				//World.dropBlockEntity(newPos, blockImage);
+
+				World.dropBlockEntity(newPos, blockImage);
 				dropped = true;
 			}
 		}
 
 	}
-	
-	public Vector2F getBlockPos () { return pos; }
+
+	public void addShadow(float amount) {
+
+		if (lightLevel < 1)
+			lightLevel += amount;
+		
+		if (lightLevel > 1)
+			lightLevel = 1;
+
+	}
+
+	public void removeShadow(float amount) {
+		
+		if (lightLevel > 0.0001)
+			lightLevel -= amount;
+		
+		if (lightLevel < 0)
+			lightLevel = 0;
+		
+	}
+
+	public Vector2F getBlockPos() {
+		return pos;
+	}
+
+	public float getLightLevel() {
+		return lightLevel;
+	}
 
 	public boolean isSolid() {
 		return isSolid;
@@ -118,12 +177,13 @@ public class Block extends Rectangle {
 		this.isAlive = isAlive;
 	}
 
+	public void setLightLevel(float lightLevel) {
+		this.lightLevel = lightLevel;
+	}
+	
+	
 	public enum BlockType {
-		GRASS_1, GRASS_2, 
-		DIRT_1, DIRT_2,
-		STONE_1, STONE_2,
-		STONE1_TOP, 
-		WOOD_1
+		GRASS_1, DIRT_1, DIRT_TL, DIRT_TR, DIRT_BL, DIRT_BR
 	}
 
 }

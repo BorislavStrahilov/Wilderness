@@ -28,7 +28,7 @@ public class MenuState extends GameState {
 	public void init() {
 		mm = new Mousemanager();
 		startGame = new GameStateButton(Main.width/2 - (buttonWidth/2), Main.height/4 - (buttonHeight/2), 
-				                         new DungeonLevelLoader(gsm), gsm, "Start Game",
+				                         new LevelLoader(gsm), gsm, "Start Game",
 				                         Assets.getButtonPressed(), Assets.getButtonUnpressed());
 		
 		options = new GameStateButton(Main.width/2 - (buttonWidth/2), Main.height/2 - (buttonHeight/2), 

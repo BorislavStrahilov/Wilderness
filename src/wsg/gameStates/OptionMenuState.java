@@ -28,18 +28,16 @@ public class OptionMenuState extends GameState {
 	public void init() {
 		mm = new Mousemanager();
 		
-		test1 = new GameStateButton(Main.width/2 - (buttonWidth/2), (float) (Main.height*0.25 - (buttonHeight/2)), "test1",
+		test1 = new GameStateButton(Main.width/2 - (buttonWidth/2), (float) (Main.height*0.30 - (buttonHeight/2)), "test 1",
 				Assets.getButtonPressed(), Assets.getButtonUnpressed());
 		
-		test2 = new GameStateButton(Main.width/2 - (buttonWidth/2), (float) (Main.height*0.5 - (buttonHeight/2)), "test2",
+		test2 = new GameStateButton(Main.width/2 - (buttonWidth/2), (float) (Main.height*0.50 - (buttonHeight/2)), "test 2",
 				Assets.getButtonPressed(), Assets.getButtonUnpressed());
 		
-		back = new GameStateButton(Main.width/2 - (buttonWidth/2), (float) (Main.height*0.75 - (buttonHeight/2)), 
+		back = new GameStateButton(Main.width/2 - (buttonWidth/2), (float) (Main.height*0.70 - (buttonHeight/2)), 
                 new MenuState(gsm), gsm, "Back",
                 Assets.getButtonPressed(), Assets.getButtonUnpressed());
 		
-		
-
 	}
 
 	public void tick(double deltaTime) {
@@ -49,6 +47,7 @@ public class OptionMenuState extends GameState {
 		back.tick();
 		
 	}
+	
 
 	public void render(Graphics2D g) {
 		g.setColor(new Color(26, 24, 9));
