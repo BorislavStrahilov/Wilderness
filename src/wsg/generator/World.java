@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import inventory.Item;
 import my.project.gop.main.Vector2F;
 import my.project.gop.main.loadImageFrom;
 import resources.test;
@@ -29,9 +30,12 @@ public class World {
 
 	private boolean hasSize = false;
 	private TileManager tiles;
+	
 	private static CopyOnWriteArrayList<BlockEntity> block_ents;
+	private static CopyOnWriteArrayList<Item> item_ents;
+	
 	private LightManager lm;
-	private Player player;
+	public static Player player;
 	
 	private boolean nightTimeStart = false;
 	private boolean dayTimeStart = false;
@@ -115,8 +119,8 @@ public class World {
 		if(player != null)
 			player.init(this);
 		
-		map_pos.xpos = spawn_block.getBlockPos().xpos - player.getPos().xpos;
-		map_pos.ypos = spawn_block.getBlockPos().ypos - player.getPos().ypos;
+		map_pos.xpos = spawn_block.getPos().xpos - player.getPos().xpos;
+		map_pos.ypos = spawn_block.getPos().ypos - player.getPos().ypos;
 		
 		//initialize world vector
 		Vector2F.setWorldVariables(map_pos.xpos, map_pos.ypos);
@@ -169,12 +173,16 @@ public class World {
 			}
 		}//end if blocks is empty
 		
+		
 	}
 	
 	
 	public void render(Graphics2D g){
 		tiles.render(g);		
 		
+		//render the blocks that are on screen, 
+		//if block has an item, render its 
+		//item infront of the player
 		if(!block_ents.isEmpty()){
 			for(BlockEntity ent : block_ents){
 				if(Player.render.intersects(ent)){
@@ -183,23 +191,27 @@ public class World {
 			}
 		}
 		
-		
+		//render player above blocks
 		if(player != null)
 			player.render(g);
 		
+		
+		//render block lights above player
 		for(Block block: TileManager.blocks){
 			if(player.render.intersects(block))
 				block.renderBlockLightLevel(g);
 		}
 		
+		//render player HUD, mouse, and inventory above lights
 		if(player != null){
 			player.getHUD().render(g);
+			player.inv.render(g);
 			player.getMouseManager().render(g);
 
 		}
 		
-		lm.render(g);
 		
+		lm.render(g);	
 	}
 	
 

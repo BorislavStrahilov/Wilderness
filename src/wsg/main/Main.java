@@ -6,6 +6,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Point;
 import java.awt.Toolkit;
 
+import inventory.InventoryMouseManager;
 import my.project.gop.main.GameWindow;
 import my.project.gop.main.SpriteSheet;
 import wsg.MoveableObjects.Player;
@@ -23,6 +24,9 @@ public class Main {
 	public static int width = 1280;
 	public static int height = 720;
 	
+	public static InventoryMouseManager imm = new InventoryMouseManager();
+	public static Mousemanager mm = new Mousemanager();
+	
 	
 	static SpriteSheet blocks = new SpriteSheet();
 
@@ -34,9 +38,10 @@ public class Main {
 		Cursor cursor = toolkit.createCustomCursor(toolkit.getImage(""), new Point(0,0), "Cursor");
 		frame.setCursor(cursor);
 		
-		frame.addMouseListener(new Mousemanager());
-		frame.addMouseMotionListener(new Mousemanager());
-		frame.addMouseWheelListener(new Mousemanager());
+		frame.addMouseListener(imm);
+		frame.addMouseListener(mm);
+		frame.addMouseMotionListener(mm);
+		frame.addMouseWheelListener(mm);
 		
 		frame.addKeyListener(new Player());
 		frame.add(new GameLoop(width, height));

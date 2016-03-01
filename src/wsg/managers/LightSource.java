@@ -35,7 +35,7 @@ public class LightSource {
 				if (lightDetection != null) {
 					if (lightDetection.intersects(block.getBounds())) {
 
-						distance = (float) Vector2F.getDistanceOnScreen(location, block.getBlockPos());
+						distance = (float) Vector2F.getDistanceOnScreen(location, block.getPos());
 
 						
 						if(distance > lightDistance){
@@ -55,43 +55,43 @@ public class LightSource {
 								
 								if (i == lightSize * 2) {
 									if (block.getLightLevel() > .10) {
-										block.removeShadow(0.01f);
+										block.removeShadow(0.1f);
 									}
 								}
 								
 								if (i == lightSize * 3) {
 									if (block.getLightLevel() > .20) {
-										block.removeShadow(0.01f);
+										block.removeShadow(0.1f);
 									}
 								}
 								if (i == lightSize * 4) {
 									if (block.getLightLevel() > .30) {
-										block.removeShadow(0.01f);
+										block.removeShadow(0.1f);
 									}
 								}
 								if (i == lightSize * 5) {
 									if (block.getLightLevel() > .50) {
-										block.removeShadow(0.01f);
+										block.removeShadow(0.1f);
 									}
 								}
 								if (i == lightSize * 6) {
 									if (block.getLightLevel() > .60) {
-										block.removeShadow(0.01f);
+										block.removeShadow(0.1f);
 									}
 								}
 								if (i == lightSize * 7) {
 									if (block.getLightLevel() > .70) {
-										block.removeShadow(0.01f);
+										block.removeShadow(0.1f);
 									}
 								}
 								if (i == lightSize * 8) {
 									if (block.getLightLevel() > .80) {
-										block.removeShadow(0.01f);
+										block.removeShadow(0.1f);
 									}
 								}
 								if (i == lightSize * 9) {
 									if (block.getLightLevel() > .90) {
-										block.removeShadow(0.01f);
+										block.removeShadow(0.1f);
 									}
 								}
 								

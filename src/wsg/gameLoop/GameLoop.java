@@ -14,7 +14,7 @@ public class GameLoop extends IDGameLoop {
 
 	GameStateManager gsm;
 	public static Assets assets = new Assets();
-	public Font font;
+	public static Font font;
 	public FontLoader fontLoader;
 	
 	public GameLoop(int width, int height) {

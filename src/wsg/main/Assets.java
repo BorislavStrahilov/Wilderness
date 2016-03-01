@@ -10,6 +10,7 @@ public class Assets {
 	
 	SpriteSheet blocks = new SpriteSheet();
 	public static SpriteSheet player = new SpriteSheet();
+	public static SpriteSheet items = new SpriteSheet();
 	private int tileWidth = 32;
 	private int tileHeight = 32;
 	
@@ -33,6 +34,10 @@ public class Assets {
 	public static BufferedImage dirt_TR;
 	public static BufferedImage dirt_BL;
 	public static BufferedImage dirt_BR;
+	
+	//ITEMS
+	public static BufferedImage item_hide;
+	public static BufferedImage item_rock;
 
 	
 	
@@ -40,6 +45,7 @@ public class Assets {
 	public void init(){
 		blocks.setSpriteSheet(loadImageFrom.LoadImageFrom(test.class, "spritesheet.png"));
 		player.setSpriteSheet(loadImageFrom.LoadImageFrom(test.class, "playersheet.png"));
+		items.setSpriteSheet(loadImageFrom.LoadImageFrom(test.class, "itemsheet.png"));
 		
 		HUD_bot = loadImageFrom.LoadImageFrom(test.class, "HUD_bot.jpg");
 
@@ -50,17 +56,31 @@ public class Assets {
 		button_pressed = player.getTile(352, 32, 32, 16);
 		
 		
+		
+		//////////////////////    BLOCKS      /////////////////////////////
 		grass_1 = blocks.getTile(0, 0, tileWidth, tileHeight);
 		dirt_1 = blocks.getTile(0, 32, tileWidth, tileHeight);
 		dirt_TL = blocks.getTile(32, 32, tileWidth, tileHeight);
 		dirt_TR = blocks.getTile(64, 32, tileWidth, tileHeight);
 		dirt_BL = blocks.getTile(96, 32, tileWidth, tileHeight);
 		dirt_BR = blocks.getTile(128, 32, tileWidth, tileHeight);
+		///////////////////////////////////////////////////////////////////
+		
+		
+		////////////////////     ITEMS     ////////////////////////////////
+		item_hide = items.getTile(0, 0, 32, 32);
+		item_rock = items.getTile(32, 0, 32, 32);
 
 
 
 		
 	}
+	
+	
+	public static BufferedImage getItem_Hide()  { return item_hide; }
+	public static BufferedImage getItem_Rock()  { return item_rock; }
+
+	
 	
 	public static BufferedImage getGrass_1()  { return grass_1; }
 	public static BufferedImage getDirt_1()   { return dirt_1;  }

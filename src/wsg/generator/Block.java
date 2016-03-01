@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
+import inventory.Item;
 import my.project.gop.main.Vector2F;
 import wsg.main.Assets;
 import wsg.managers.LightSource;
@@ -22,6 +23,12 @@ public class Block extends Rectangle {
 	private boolean isAlive;
 	private boolean dropped = false;
 	private boolean shouldDrop = false;
+	
+	private Item item;
+	private float itemImage_yPos = 0f;
+	private boolean itemImageUp = true;
+	
+	public Rectangle worldPosBounds;
 
 	private float lightLevel;
 
@@ -46,7 +53,8 @@ public class Block extends Rectangle {
 	}
 
 	public void init() {
-
+		
+		worldPosBounds = new Rectangle();
 		setBounds((int) pos.xpos, (int) pos.ypos, blockSize, blockSize);
 		isAlive = true;
 
@@ -83,6 +91,7 @@ public class Block extends Rectangle {
 	public void tick(double deltaTime) {
 		if (isAlive) {
 			setBounds((int) pos.xpos, (int) pos.ypos, blockSize, blockSize);
+			worldPosBounds.setBounds((int)pos.getWorldLocation().xpos, (int)pos.getWorldLocation().ypos, blockSize, blockSize);
 		}
 
 	}
@@ -104,11 +113,14 @@ public class Block extends Rectangle {
 		if (isAlive) {
 			if (blockImage != null) {
 
-				g.drawImage(blockImage, (int) pos.getWorldLocation().xpos, (int) pos.getWorldLocation().ypos, blockSize,
-						blockSize, null);
+				//DRAW THE BLOCK IMAGE
+				g.drawImage(blockImage, 
+							(int) pos.getWorldLocation().xpos, 
+							(int) pos.getWorldLocation().ypos, 
+							blockSize, blockSize, null);
 				
 				
-				
+				//DRAW THE SHADOW FOR NIGHTTIME
 				g.setColor(Color.black);
 
 				if(World.currentlyNightTime){
@@ -121,7 +133,7 @@ public class Block extends Rectangle {
 
 				g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1));
 				g.setColor(Color.white);
-
+				
 			}
 		} else {
 			if (!dropped && shouldDrop) {
@@ -135,6 +147,44 @@ public class Block extends Rectangle {
 			}
 		}
 
+	}
+	
+	public void renderItemImage(Graphics2D g){
+		
+		//SHOW ITEM IF BLOCK CONTAINS IT
+		if(item != null){
+			
+			g.setColor(new Color(0, 0, 0, 150));
+			
+			//draw a shadow under item
+			g.fillOval((int) (pos.getWorldLocation().xpos + (blockSize/8)), 
+					   (int) (pos.getWorldLocation().ypos + (blockSize*.6)),
+					   (int)( (blockSize*.75)    ), (int) ( (blockSize*.75) /2) );
+			
+			//draw actual item image
+			g.drawImage(item.getItemImage(), 
+						(int) (pos.getWorldLocation().xpos + (blockSize/8)), 
+						(int) (pos.getWorldLocation().ypos + (blockSize/8) + itemImage_yPos ), 
+						(int)(blockSize*.75), (int)(blockSize*.75),null);
+			
+			//update make item image move up and down
+			
+			//image went as high as it should
+			if(itemImage_yPos <= -10.0f){
+				itemImageUp   = false;
+			}
+			//image went as low as it should
+			if(itemImage_yPos >= 0f){
+				itemImageUp   = true;
+			}
+			
+			//change direction based on boolean
+			if(itemImageUp)
+				itemImage_yPos-= 0.3f;
+			else
+				itemImage_yPos+= 0.3f;
+		}
+		
 	}
 
 	public void addShadow(float amount) {
@@ -157,12 +207,32 @@ public class Block extends Rectangle {
 		
 	}
 
-	public Vector2F getBlockPos() {
+	public Item getItem() {
+		return item;
+	}
+	
+	public void setItem(Item item) {
+		this.item = item;
+	}
+	
+	public void removeItem(){
+		item = null;
+	}
+	
+	public Vector2F getPos() {
 		return pos;
+	}
+	
+	public Vector2F getWorldPos(){
+		return pos.getWorldLocation();
 	}
 
 	public float getLightLevel() {
 		return lightLevel;
+	}
+	
+	public BlockType getBlocktype() {
+		return blocktype;
 	}
 
 	public boolean isSolid() {

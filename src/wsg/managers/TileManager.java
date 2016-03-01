@@ -6,10 +6,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import wsg.MoveableObjects.Player;
 import wsg.generator.Block;
+import wsg.generator.World;
 
 public class TileManager {
 
 	public static CopyOnWriteArrayList<Block> blocks;
+	
 	
 	
 	public TileManager() {
@@ -36,9 +38,20 @@ public class TileManager {
 	}
 
 	public void render(Graphics2D g){
+		
 		for(Block block: blocks){
-			block.render(g);
+			if(block.isAlive()){
+				//render block
+				block.render(g);
+				
+				//if block has item, render it
+				if(block.getItem() != null)
+					block.renderItemImage(g);
+				
+			}
 		}
+		
+
 		
 	}
 	

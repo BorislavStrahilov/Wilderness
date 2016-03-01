@@ -10,6 +10,9 @@ import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import inventory.Inventory;
+import inventory.Item;
+import wsg.generator.Block;
 import wsg.generator.World;
 import my.project.gop.main.Vector2F;
 import wsg.gameLoop.GameLoop;
@@ -24,7 +27,9 @@ import wsg.managers.Mousemanager;
 public class Player implements KeyListener {
 
 	static Vector2F pos;
+	private static Point playerPoint;
 	private static World world;
+	public static Inventory inv;;
 
 
 	private static int width = 32;
@@ -103,16 +108,17 @@ public class Player implements KeyListener {
 
 	public Player() {
 		
-
-		
 		pos = new Vector2F((Main.width / 2) - (width / 2), (Main.height / 2) - ((Main.height / 5) / 2) - (height / 2));
 
 	}
 
 	public void init(World givenWorld) {
+		playerPoint = new Point((int) (pos.xpos + world.map_pos.xpos), (int) (pos.ypos + world.map_pos.ypos));
+
 		
 		world = givenWorld;
-		
+		inv = new Inventory(50, (Main.height - 120), 6, 2, givenWorld);
+		inv.init();
 		hud = new HUDmanager(world);
 		gui = new GUImanager();
 
@@ -210,6 +216,10 @@ public class Player implements KeyListener {
 
 	public void tick(double deltaTime) {
 
+		playerPoint = new Point((int) (pos.xpos + width/2), (int) (pos.ypos + height/2));
+		
+		inv.tick();
+		
 		aniTime = (System.nanoTime() / 100000000);
 
 		hungerTimer = (int) (System.nanoTime() / 1000000000) - hungerTimeStart;
@@ -292,6 +302,39 @@ public class Player implements KeyListener {
 			}
 		}
 		
+		
+		//DROPPING AND PICKING
+		//ITEMS TO/FROM THE WORLD
+		
+		//if mouse interesects with gameworld
+		if(inv.worldScreen.contains(playerMM.mouse)){
+			
+			//if mouse holds item
+			if( playerMM.itemHeld != null ){
+				if(playerMM.pressed){
+					inv.dropItem(playerMM, playerPoint);
+					playerMM.pressed = false;
+				}		
+			}
+			
+			
+			//if mouse is near the player
+			if(inv.worldScreenSmall.contains(playerMM.mouse)){
+				//if mouse is empty and clicked
+				{
+					if(playerMM.pressed){
+						inv.pickupItem(playerMM);
+						playerMM.pressed = false;
+					}
+					
+				}
+			}
+		}
+		
+		
+		
+		
+		
 	}// end tick
 
 	public void render(Graphics2D g) {
@@ -340,18 +383,10 @@ public class Player implements KeyListener {
 			ani_idleDown.update(System.currentTimeMillis());
 
 		}
-		
-		
-//		g.setColor(Color.black);
-//		
-//		if(World.currentlyNightTime){
-//			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
-//			g.fillRect((int) pos.xpos - (width / scale), (int) (pos.ypos - height), width * scale, height * scale);
-//		}
-
-
+				
 		g.setColor(Color.white);
-	
+				
+
 	}
 
 	public void moveMapUp(float speed) {
@@ -682,8 +717,9 @@ public class Player implements KeyListener {
 			running = true;
 		}
 		
+		
+		//NIGHT TIME TEST
 		if (key == KeyEvent.VK_F) {
-			
 			
 			if( world.currentlyDayTime){
 				world.currentlyDayTime = false;
@@ -701,6 +737,17 @@ public class Player implements KeyListener {
 
 		}
 		
+		if(key == KeyEvent.VK_E){
+			inv.toggle();
+		}
+		
+		if(key == KeyEvent.VK_R){
+			inv.addItem(Item.HIDE);
+		}	
+		if(key == KeyEvent.VK_T){
+			inv.addItem(Item.ROCK);
+		}
+			
 		
 		//DEBUG ENABLE
 		if (key == KeyEvent.VK_F3 && hud.debugInfo == false) {
